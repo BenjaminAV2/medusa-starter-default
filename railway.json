@@ -5,7 +5,7 @@
     "buildCommand": "yarn install --immutable && yarn build"
   },
   "deploy": {
-    "startCommand": "yarn run start",
+    "startCommand": "yarn medusa migrations run && yarn run start",
     "restartPolicyType": "ON_FAILURE",
     "restartPolicyMaxRetries": 10
   }
