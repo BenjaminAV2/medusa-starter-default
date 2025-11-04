@@ -1,1 +1,0 @@
-import{r as e,I as s,de as l}from"./index-C52cQz5B.js";const x=e.forwardRef(({className:a,...t},r)=>e.createElement("textarea",{ref:r,className:s(l,"txt-small min-h-[60px] w-full px-2 py-1.5",a),...t}));x.displayName="Textarea";export{x as T};
