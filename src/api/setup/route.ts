@@ -41,3 +41,5 @@ export const GET = async (
     })
   }
 }
+
+export const AUTHENTICATE = false
