@@ -7,7 +7,8 @@ export const POST = async (
 ) => {
   const authModuleService: any = req.scope.resolve(Modules.AUTH)
   
-  const { email, password } = req.body
+  const body = req.body as { email: string; password: string }
+  const { email, password } = body
   
   try {
     const result = await authModuleService.authenticate("emailpass", {
