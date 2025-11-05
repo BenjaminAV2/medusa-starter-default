@@ -1,7 +1,6 @@
 .git
 .github
 node_modules
-.medusa
 .yarn/cache
 .yarn/install-state.gz
 *.log
