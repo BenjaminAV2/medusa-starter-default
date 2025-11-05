@@ -26,7 +26,7 @@
     "@medusajs/cli": "2.11.2",
     "@medusajs/framework": "2.11.2",
     "@medusajs/medusa": "2.11.2",
-    "posthog-node": "^4.0.2"
+    "posthog-node": "^5.11.1"
   },
   "devDependencies": {
     "@medusajs/test-utils": "2.11.2",
