@@ -1,10 +1,11 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
+import { Modules } from "@medusajs/framework/utils"
 
 export const GET = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
-  const userModuleService: any = req.scope.resolve("userModuleService")
+  const userModuleService: any = req.scope.resolve(Modules.USER)
   
   const email = "admin@avdigital.com"
   const password = "supersecret123"
@@ -31,6 +32,7 @@ export const GET = async (
       message: "Admin user created successfully",
       email,
       password,
+      userId: user.id,
       warning: "DELETE THIS ENDPOINT AFTER FIRST USE"
     })
     
