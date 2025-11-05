@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { Modules } from "@medusajs/framework/utils"
+import jwt from "jsonwebtoken"
 
 export const POST = async (
   req: MedusaRequest,
@@ -29,13 +30,17 @@ export const POST = async (
     
     const user = users[0]
     
-    // 3. Générer le token
-    const token = await authModuleService.createTokens({
-      provider: "emailpass",
-      provider_metadata: {
-        user_id: user.id
-      }
-    })
+    // 3. Générer le token JWT
+    const secret = process.env.JWT_SECRET || "supersecret"
+    const token = jwt.sign(
+      {
+        user_id: user.id,
+        email: user.email,
+        auth_identity_id: authResult.authIdentity.id
+      },
+      secret,
+      { expiresIn: "24h" }
+    )
     
     return res.json({
       user: {
@@ -44,7 +49,7 @@ export const POST = async (
         first_name: user.first_name,
         last_name: user.last_name
       },
-      token: token.token
+      token
     })
     
   } catch (error: any) {
