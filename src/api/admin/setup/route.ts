@@ -4,7 +4,7 @@ export const GET = async (
   req: MedusaRequest,
   res: MedusaResponse
 ) => {
-  const userModuleService = req.scope.resolve("userModuleService")
+  const userModuleService: any = req.scope.resolve("userModuleService")
   
   const email = "admin@avdigital.com"
   const password = "supersecret123"
@@ -34,7 +34,7 @@ export const GET = async (
       warning: "DELETE THIS ENDPOINT AFTER FIRST USE"
     })
     
-  } catch (error) {
+  } catch (error: any) {
     return res.status(500).json({ 
       message: "Error creating user",
       error: error.message 
