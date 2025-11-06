@@ -1,0 +1,11 @@
+[phases.setup]
+nixPkgs = ["nodejs-20_x", "yarn"]
+
+[phases.install]
+cmds = ["yarn install --immutable"]
+
+[phases.build]
+cmds = ["yarn build"]
+
+[start]
+cmd = "sh -c 'yarn medusa db:migrate && yarn start'"
