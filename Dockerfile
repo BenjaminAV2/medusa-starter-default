@@ -36,6 +36,10 @@ RUN yarn workspaces focus --production && yarn cache clean
 
 # Copy built application from builder stage
 COPY --from=builder /app/.medusa ./.medusa
+COPY --from=builder /app/.medusa/server/medusa-config.js ./medusa-config.js
+
+# Set production environment
+ENV NODE_ENV=production
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && adduser -S nodejs -u 1001
