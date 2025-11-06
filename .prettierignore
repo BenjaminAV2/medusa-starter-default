@@ -1,0 +1,10 @@
+node_modules
+.medusa
+dist
+build
+coverage
+*.lock
+yarn.lock
+.yarn
+.env
+.env.*
