@@ -1,6 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http"
 import { ContainerRegistrationKeys, Modules } from "@medusajs/framework/utils"
-import { createApiKeysWorkflow } from "@medusajs/medusa/core-flows"
+import { createApiKeysWorkflow, linkSalesChannelsToApiKeyWorkflow } from "@medusajs/medusa/core-flows"
 
 export const GET = async (
   req: MedusaRequest,
@@ -35,6 +35,28 @@ export const GET = async (
 
       apiKeys = result
       logger.info("✅ Publishable API key created successfully")
+
+      // Link the default sales channel to the publishable API key
+      try {
+        const salesChannelService = req.scope.resolve(Modules.SALES_CHANNEL)
+        const defaultSalesChannel = await salesChannelService.listSalesChannels({
+          is_default: true
+        }, {
+          take: 1
+        })
+
+        if (defaultSalesChannel && defaultSalesChannel.length > 0) {
+          await linkSalesChannelsToApiKeyWorkflow(req.scope).run({
+            input: {
+              id: apiKeys[0].id,
+              add: [defaultSalesChannel[0].id],
+            },
+          })
+          logger.info("✅ Sales channel linked to publishable API key")
+        }
+      } catch (error) {
+        logger.error("Failed to link sales channel to publishable API key:", error)
+      }
     } catch (error) {
       logger.error("Failed to create publishable API key:", error)
       return res.status(500).json({
