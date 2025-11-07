@@ -17,7 +17,10 @@ export class R2StorageService {
     this.publicUrl = process.env.R2_PUBLIC_URL || ''
 
     if (!accountId || !accessKeyId || !secretAccessKey) {
-      throw new Error('R2 credentials not configured')
+      console.warn('[R2Storage] R2 credentials not configured - R2 storage will be disabled')
+      // @ts-ignore - Client will be undefined, methods will throw if called
+      this.client = null
+      return
     }
 
     // Configuration du client S3 pour R2
@@ -46,6 +49,10 @@ export class R2StorageService {
     key: string
     expiresAt: Date
   }> {
+    if (!this.client) {
+      throw new Error('R2 storage is not configured. Please set R2 environment variables.')
+    }
+
     const command = new PutObjectCommand({
       Bucket: this.bucket,
       Key: key,
