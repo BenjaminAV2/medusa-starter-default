@@ -70,11 +70,25 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       } as SeedResult)
     }
 
-    // 2. Create categories
-    logger.info('📁 Creating categories...')
-    const { result: categories } = await createProductCategoriesWorkflow(req.scope).run({
-      input: {
-        product_categories: [
+    // 2. Get or create categories
+    logger.info('📁 Checking categories...')
+
+    // Check if categories already exist
+    let categories = await productService.listProductCategories({
+      handle: [
+        'stickers-vinyle-blanc',
+        'stickers-vinyle-transparent',
+        'stickers-vinyle-holographique',
+        'stickers-vinyle-miroir',
+        'stickers-cut-contour',
+      ],
+    })
+
+    if (categories.length === 0) {
+      logger.info('📁 Creating categories...')
+      const result = await createProductCategoriesWorkflow(req.scope).run({
+        input: {
+          product_categories: [
           {
             name: 'Stickers Vinyle Blanc',
             handle: 'stickers-vinyle-blanc',
@@ -106,10 +120,13 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
             description: 'Stickers découpés suivant votre design exact',
           },
         ],
-      },
-    })
-
-    logger.info(`✅ Created ${categories.length} categories`)
+        },
+      })
+      categories = result.result
+      logger.info(`✅ Created ${categories.length} categories`)
+    } else {
+      logger.info(`✅ Found ${categories.length} existing categories`)
+    }
 
     // 3. Create products with options
     logger.info('🏷️  Creating products with options...')
