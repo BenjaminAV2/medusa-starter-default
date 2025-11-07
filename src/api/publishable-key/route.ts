@@ -36,23 +36,29 @@ export const GET = async (
       apiKeys = result
       logger.info("✅ Publishable API key created successfully")
 
-      // Link the default sales channel to the publishable API key
+      // Link the first sales channel to the publishable API key
       try {
         const salesChannelService = req.scope.resolve(Modules.SALES_CHANNEL)
-        const defaultSalesChannel = await salesChannelService.listSalesChannels({
-          is_default: true
-        }, {
-          take: 1
+        const salesChannels = await salesChannelService.listSalesChannels({}, {
+          take: 10
         })
 
-        if (defaultSalesChannel && defaultSalesChannel.length > 0) {
+        // Try to find one named "Default Sales Channel" or just use the first one
+        const defaultSalesChannel = salesChannels.filter(sc =>
+          sc.name === "Default Sales Channel" || sc.name === "default"
+        )
+        const selectedChannel = defaultSalesChannel.length > 0
+          ? [defaultSalesChannel[0]]
+          : salesChannels.slice(0, 1)
+
+        if (selectedChannel && selectedChannel.length > 0) {
           await linkSalesChannelsToApiKeyWorkflow(req.scope).run({
             input: {
               id: apiKeys[0].id,
-              add: [defaultSalesChannel[0].id],
+              add: [selectedChannel[0].id],
             },
           })
-          logger.info("✅ Sales channel linked to publishable API key")
+          logger.info(`✅ Sales channel "${selectedChannel[0].name}" linked to publishable API key`)
         }
       } catch (error) {
         logger.error("Failed to link sales channel to publishable API key:", error)

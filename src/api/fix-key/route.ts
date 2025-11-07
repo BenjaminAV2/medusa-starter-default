@@ -27,21 +27,27 @@ export const POST = async (
     const apiKey = apiKeys[0]
     logger.info(`Found publishable API key: ${apiKey.id}`)
 
-    // Get the default sales channel
-    const defaultSalesChannel = await salesChannelService.listSalesChannels({
-      is_default: true
-    }, {
-      take: 1
+    // Get the first sales channel (or the one named "Default Sales Channel")
+    const salesChannels = await salesChannelService.listSalesChannels({}, {
+      take: 10
     })
 
-    if (!defaultSalesChannel || defaultSalesChannel.length === 0) {
+    // Try to find the default one by name, or just take the first one
+    const defaultSalesChannel = salesChannels.filter(sc =>
+      sc.name === "Default Sales Channel" || sc.name === "default"
+    )
+    const selectedChannel = defaultSalesChannel.length > 0
+      ? [defaultSalesChannel[0]]
+      : salesChannels.slice(0, 1)
+
+    if (!selectedChannel || selectedChannel.length === 0) {
       return res.status(404).json({
-        error: "No default sales channel found"
+        error: "No sales channel found"
       })
     }
 
-    const salesChannel = defaultSalesChannel[0]
-    logger.info(`Found default sales channel: ${salesChannel.id}`)
+    const salesChannel = selectedChannel[0]
+    logger.info(`Found sales channel: ${salesChannel.id} (${salesChannel.name})`)
 
     // Link the sales channel to the API key
     await linkSalesChannelsToApiKeyWorkflow(req.scope).run({
