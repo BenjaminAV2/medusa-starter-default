@@ -8,4 +8,4 @@ cmds = ["yarn install --immutable"]
 cmds = ["yarn build"]
 
 [start]
-cmd = "sh -c 'yarn medusa db:migrate && yarn start'"
+cmd = "yarn start"
