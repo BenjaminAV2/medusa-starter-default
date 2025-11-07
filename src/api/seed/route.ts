@@ -48,9 +48,14 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
 
     // 1. Check if products already exist with options
     const productService = req.scope.resolve(Modules.PRODUCT)
-    const existingProducts = await productService.listProducts({
-      handle: ['sticker-personnalise'],
-    })
+    const existingProducts = await productService.listProducts(
+      {
+        handle: ['sticker-personnalise'],
+      },
+      {
+        relations: ['options'],
+      }
+    )
 
     if (existingProducts.length > 0 && existingProducts[0].options && existingProducts[0].options.length >= 3) {
       logger.info('Products with options already exist, skipping seed')
