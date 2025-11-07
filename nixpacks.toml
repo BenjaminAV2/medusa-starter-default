@@ -1,5 +1,6 @@
 [phases.setup]
 nixPkgs = ["nodejs_20", "yarn"]
+cmds = ["corepack enable", "corepack prepare yarn@4.10.3 --activate"]
 
 [phases.install]
 cmds = ["yarn install --immutable"]
