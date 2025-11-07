@@ -70,6 +70,15 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
       } as SeedResult)
     }
 
+    // 1b. If product exists without options, delete it to recreate properly
+    if (existingProducts.length > 0) {
+      logger.info('⚠️  Product exists without proper options, deleting to recreate...')
+      for (const product of existingProducts) {
+        await productService.deleteProducts([product.id])
+      }
+      logger.info('✅ Deleted existing product(s) without options')
+    }
+
     // 2. Get or create categories
     logger.info('📁 Checking categories...')
 
