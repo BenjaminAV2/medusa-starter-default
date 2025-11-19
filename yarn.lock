@@ -16429,9 +16429,9 @@ __metadata:
   linkType: hard
 
 "rate-limiter-flexible@npm:^8.1.0":
-  version: 8.1.0
-  resolution: "rate-limiter-flexible@npm:8.1.0"
-  checksum: 10c0/a01d177383d8703c8c5dfe5a341f51483229769e261b3a330b5ac35ed34631ffae69da3d0f53578ec2ee671739bf9c961d12cee58ba655d94b7542900b42f8db
+  version: 8.2.1
+  resolution: "rate-limiter-flexible@npm:8.2.1"
+  checksum: 10c0/799d2bbc50c857ff8582bd02e933108295967a6c20cb7920d6096245bf7df67d254ec245525f771521008fe5c0d412d075352749220091cc50474cf05b2a5e63
   languageName: node
   linkType: hard
 
